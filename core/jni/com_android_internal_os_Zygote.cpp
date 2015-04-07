@@ -226,14 +226,22 @@ static void SetCapabilities(JNIEnv* env, int64_t permitted, int64_t effective) {
   __user_cap_header_struct capheader;
   memset(&capheader, 0, sizeof(capheader));
   capheader.version = _LINUX_CAPABILITY_VERSION_3;
-  capheader.pid = 0;
+  capheader.pid = getpid();
 
   __user_cap_data_struct capdata[2];
   memset(&capdata, 0, sizeof(capdata));
-  capdata[0].effective = effective;
-  capdata[1].effective = effective >> 32;
-  capdata[0].permitted = permitted;
-  capdata[1].permitted = permitted >> 32;
+
+  if (capget(&capheader, capdata) != 0)
+    RuntimeAbort(env);
+
+  ALOGV("capget perm=%llx %llx eff=%llx %llx", 
+     capdata[0].permitted, capdata[1].permitted,
+     capdata[0].effective, capdata[1].effective);
+
+  capdata[0].effective &= effective;
+  capdata[1].effective &= effective >> 32;
+  capdata[0].permitted &= permitted;
+  capdata[1].permitted &= permitted >> 32;
 
   if (capset(&capheader, &capdata[0]) == -1) {
     ALOGE("capset(%lld, %lld) failed", permitted, effective);
