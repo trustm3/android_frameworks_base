@@ -169,6 +169,19 @@ public class SearchPanelView extends FrameLayout implements StatusBarPanel {
     }
 
     public void show(final boolean show, boolean animate) {
+        /*
+         * When long pressing the home-butten, we want to switch
+         * to the container selection screen.
+         * This is done by sending an intent to the TrustmeService
+         * at the time when normally the Assist-GlowPadView is shown.
+         */
+        Intent switchIntent = new Intent();
+        switchIntent.setAction("de.fraunhofer.aisec.trustme.service.intent.action.switch");
+        mContext.sendBroadcast(switchIntent);
+        Log.d(TAG,"Broadcasting switch_to_a0 intent (will be received by the Trustme Service)");
+        vibrate();
+
+        /*
         if (show) {
             maybeSwapSearchIcon();
             if (getVisibility() != View.VISIBLE) {
@@ -190,6 +203,7 @@ public class SearchPanelView extends FrameLayout implements StatusBarPanel {
                 setVisibility(View.INVISIBLE);
             }
         }
+        */
     }
 
     private void startEnterAnimation() {
