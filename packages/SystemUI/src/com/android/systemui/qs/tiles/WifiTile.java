@@ -85,12 +85,18 @@ public class WifiTile extends QSTile<QSTile.SignalState> {
 
     @Override
     protected void handleClick() {
+        if (!canManagePrivilegedServices())
+            return;
+
         mState.copyTo(mStateBeforeClick);
         mController.setWifiEnabled(!mState.enabled);
     }
 
     @Override
     protected void handleSecondaryClick() {
+        if (!canManagePrivilegedServices())
+            return;
+
         if (!mWifiController.canConfigWifi()) {
             mHost.startSettingsActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
             return;

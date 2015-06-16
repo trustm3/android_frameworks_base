@@ -75,6 +75,9 @@ public class CellularTile extends QSTile<QSTile.SignalState> {
 
     @Override
     protected void handleClick() {
+        if (!canManagePrivilegedServices())
+            return;
+
         if (mDataController.isMobileDataSupported()) {
             showDetail(true);
         } else {

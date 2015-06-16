@@ -16,6 +16,7 @@
 
 package com.android.systemui.qs;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimatedVectorDrawable;
@@ -23,6 +24,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemProperties;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
@@ -68,10 +70,31 @@ public abstract class QSTile<TState extends State> implements Listenable {
     abstract protected void handleClick();
     abstract protected void handleUpdateState(TState state, Object arg);
 
+    private static final Intent SERVICE_POPUP = new Intent().setComponent(new ComponentName(
+        "de.fraunhofer.aisec.trustme.service", "de.fraunhofer.aisec.trustme.service.PopupActivity"));
+
     protected QSTile(Host host) {
         mHost = host;
         mContext = host.getContext();
         mHandler = new H(host.getLooper());
+    }
+
+    /**
+     * Check if we are privileged and are able to configure privileged services,
+     * use this in the corresponding tiles for privileged services such as wifi or airplane mode.
+     *
+     * If we are not priveleged, a POPUP Intent is generated for the TrustmeService. This shows
+     * a corresponding message and offers to switch to privileged Container instance which is
+     * able to configure the asked service.
+     */
+    protected boolean canManagePrivilegedServices() {
+        boolean privileged = SystemProperties.getBoolean("ro.trustme.a0", false);
+        if (!privileged) {
+            SERVICE_POPUP.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            mHost.startSettingsActivity(SERVICE_POPUP);
+        }
+        return privileged;
     }
 
     public boolean supportsDualTargets() {

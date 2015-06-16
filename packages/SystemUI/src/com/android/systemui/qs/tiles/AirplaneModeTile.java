@@ -55,6 +55,10 @@ public class AirplaneModeTile extends QSTile<QSTile.BooleanState> {
 
     @Override
     public void handleClick() {
+
+        if (!canManagePrivilegedServices())
+            return;
+
         setEnabled(!mState.value);
         mEnable.setAllowAnimation(true);
         mDisable.setAllowAnimation(true);
