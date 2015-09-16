@@ -238,8 +238,9 @@ static void SetCapabilities(JNIEnv* env, int64_t permitted, int64_t effective) {
      capdata[0].permitted, capdata[1].permitted,
      capdata[0].effective, capdata[1].effective);
 
-  capdata[0].effective &= effective;
-  capdata[1].effective &= effective >> 32;
+  // only ask for cappabilities which are permitted
+  capdata[0].effective = capdata[0].permitted & effective;
+  capdata[1].effective = capdata[1].permitted & (effective >> 32);
   capdata[0].permitted &= permitted;
   capdata[1].permitted &= permitted >> 32;
 
