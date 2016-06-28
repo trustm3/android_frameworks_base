@@ -115,6 +115,9 @@
     <!-- Screen Capturing -->
     <uses-permission android:name="android.permission.MANAGE_MEDIA_PROJECTION" />
 
+	<!-- Required to send trustme-specific intents to the trustme service -->
+    <uses-permission android:name="de.fraunhofer.aisec.trustme.service.permission.SEND_INTENTS" />
+
     <application
         android:name=".SystemUIApplication"
         android:persistent="true"
