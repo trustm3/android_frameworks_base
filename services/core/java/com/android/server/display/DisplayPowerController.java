@@ -987,25 +987,28 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
             mPowerState.dismissColorFade();
         } else {
             // Want screen off.
-            mPendingScreenOff = true;
-            if (mPowerState.getColorFadeLevel() == 0.0f) {
-                // Turn the screen off.
-                // A black surface is already hiding the contents of the screen.
-                setScreenState(Display.STATE_OFF);
-                mPendingScreenOff = false;
-                mPowerState.dismissColorFadeResources();
-            } else if (performScreenOffTransition
-                    && mPowerState.prepareColorFade(mContext,
-                            mColorFadeFadesConfig ?
-                                    ColorFade.MODE_FADE : ColorFade.MODE_COOL_DOWN)
-                    && mPowerState.getScreenState() != Display.STATE_OFF) {
-                // Perform the screen off animation.
-                mColorFadeOffAnimator.start();
-            } else {
-                // Skip the screen off animation and add a black surface to hide the
-                // contents of the screen.
-                mColorFadeOffAnimator.end();
-            }
+            setScreenState(Display.STATE_OFF);
+            mPendingScreenOff = false;
+            mPowerState.dismissColorFadeResources();
+            //mPendingScreenOff = true;
+            //if (mPowerState.getColorFadeLevel() == 0.0f) {
+            //    // Turn the screen off.
+            //    // A black surface is already hiding the contents of the screen.
+            //    setScreenState(Display.STATE_OFF);
+            //    mPendingScreenOff = false;
+            //    mPowerState.dismissColorFadeResources();
+            //} else if (performScreenOffTransition
+            //        && mPowerState.prepareColorFade(mContext,
+            //                mColorFadeFadesConfig ?
+            //                        ColorFade.MODE_FADE : ColorFade.MODE_COOL_DOWN)
+            //        && mPowerState.getScreenState() != Display.STATE_OFF) {
+            //    // Perform the screen off animation.
+            //    mColorFadeOffAnimator.start();
+            //} else {
+            //    // Skip the screen off animation and add a black surface to hide the
+            //    // contents of the screen.
+            //    mColorFadeOffAnimator.end();
+            //}
         }
     }
 
