@@ -1250,6 +1250,14 @@ public class AppOpsService extends IAppOpsService.Stub {
                     } catch (RemoteException e) {
                         Slog.w(TAG, "Could not contact PackageManager", e);
                     }
+                    // HACK to allow request from other container (camera to record video)
+                    if (pkgUid == -1) {
+                        Slog.w(TAG, "Allowing other container");
+                        ops = new Ops(packageName, uidState, isPrivileged);
+                        uidState.pkgOps.put(packageName, ops);
+                        return ops;
+                    }
+
                     if (pkgUid != uid) {
                         // Oops!  The package name is not valid for the uid they are calling
                         // under.  Abort.
