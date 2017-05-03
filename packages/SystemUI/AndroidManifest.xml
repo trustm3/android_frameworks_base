@@ -165,6 +165,9 @@
     <!-- shortcut manager -->
     <uses-permission android:name="android.permission.RESET_SHORTCUT_MANAGER_THROTTLING" />
 
+    <!-- trustme container shutdown tile -->
+    <uses-permission android:name="de.fraunhofer.aisec.trustme.service.permission.SEND_INTENTS" />
+
     <application
         android:name=".SystemUIApplication"
         android:persistent="true"
