@@ -799,6 +799,9 @@ public class Build {
         }
 
         if (!TextUtils.isEmpty(vendor)) {
+            // vendor is pre-built by google thus does missmatch with trustme build fingerprint
+            if (!TextUtils.isEmpty(SystemProperties.get("ro.trustme.version"))) return true;
+
             if (!Objects.equals(system, vendor)) {
                 Slog.e(TAG, "Mismatched fingerprints; system reported " + system
                         + " but vendor reported " + vendor);
